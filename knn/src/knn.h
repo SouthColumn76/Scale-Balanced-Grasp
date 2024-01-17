@@ -3,7 +3,8 @@
 
 #ifdef WITH_CUDA
 #include "cuda/vision.h"
-#include <THC/THC.h>
+#include <ATen/ceil_div.h>
+#include <ATen/cuda/ThrustAllocator.h>
 extern THCState *state;
 #endif
 
@@ -30,7 +31,7 @@ int knn(at::Tensor& ref, at::Tensor& query, at::Tensor& idx)
   if (ref.type().is_cuda()) {
 #ifdef WITH_CUDA
     // TODO raise error if not compiled with CUDA
-    float *dist_dev = (float*)THCudaMalloc(state, ref_nb * query_nb * sizeof(float));
+    float *dist_dev = (float*)c10::cuda::CUDACachingAllocator::raw_alloc(ref_nb * query_nb * sizeof(float));
 
     for (int b = 0; b < batch; b++)
     {
@@ -39,7 +40,7 @@ int knn(at::Tensor& ref, at::Tensor& query, at::Tensor& idx)
       knn_device(ref_dev + b * dim * ref_nb, ref_nb, query_dev + b * dim * query_nb, query_nb, dim, k,
       dist_dev, idx_dev + b * k * query_nb, c10::cuda::getCurrentCUDAStream());
     }
-    THCudaFree(state, dist_dev);
+    c10::cuda::CUDACachingAllocator::raw_delete(dist_dev);
     cudaError_t err = cudaGetLastError();
     if (err != cudaSuccess)
     {
