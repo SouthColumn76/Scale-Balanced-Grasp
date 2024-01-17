@@ -1,5 +1,5 @@
-torch==1.6
-tensorboard==2.3
+torch==2.1.2
+tensorboard==2.14
 numpy
 scipy
 open3d>=0.8
