@@ -8,7 +8,6 @@
 #include <ATen/cuda/CUDAContext.h>
 #include <ATen/ceil_div.h>
 #include <ATen/cuda/ThrustAllocator.h>
-extern THCState *state;
 #endif
 
 
