@@ -3,6 +3,10 @@
 
 #ifdef WITH_CUDA
 #include "cuda/vision.h"
+#include <ATen/ATen.h>
+#include <ATen/AccumulateType.h>
+#include <ATen/cuda/CUDAApplyUtils.cuh>
+#include <ATen/cuda/CUDAContext.h>
 #include <ATen/ceil_div.h>
 #include <ATen/cuda/ThrustAllocator.h>
 extern THCState *state;
@@ -38,7 +42,7 @@ int knn(at::Tensor& ref, at::Tensor& query, at::Tensor& idx)
     // knn_device(ref_dev + b * dim * ref_nb, ref_nb, query_dev + b * dim * query_nb, query_nb, dim, k,
     //   dist_dev, idx_dev + b * k * query_nb, THCState_getCurrentStream(state));
       knn_device(ref_dev + b * dim * ref_nb, ref_nb, query_dev + b * dim * query_nb, query_nb, dim, k,
-      dist_dev, idx_dev + b * k * query_nb, c10::cuda::getCurrentCUDAStream());
+      dist_dev, idx_dev + b * k * query_nb, at::cuda::getCurrentCUDAStream());
     }
     c10::cuda::CUDACachingAllocator::raw_delete(dist_dev);
     cudaError_t err = cudaGetLastError();
