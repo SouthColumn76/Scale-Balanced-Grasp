@@ -45,7 +45,7 @@ int knn(at::Tensor& ref, at::Tensor& query, at::Tensor& idx)
     if (err != cudaSuccess)
     {
         printf("error in knn: %s\n", cudaGetErrorString(err));
-        THError("aborting");
+        AT_ERROR("aborting");
     }
     return 1;
 #else
