@@ -5,7 +5,6 @@
 #include "cuda/vision.h"
 #include <ATen/ATen.h>
 #include <ATen/AccumulateType.h>
-#include <ATen/cuda/CUDAApplyUtils.cuh>
 #include <ATen/cuda/CUDAContext.h>
 #include <ATen/ceil_div.h>
 #include <ATen/cuda/ThrustAllocator.h>
